@@ -1,0 +1,364 @@
+{% extends "base.html" %} {% block title %}Dashboard | SnapStream{% endblock %}
+{% block content %}
+<div class="dashboard-page">
+  <div class="container">
+    <div class="header-section">
+      <h1>Welcome back, {{ username }}</h1>
+      <p class="subtitle">
+        Manage your media content and monitor processing activities
+      </p>
+    </div>
+
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-header">
+          <div class="stat-icon"><i class="fa-solid fa-hard-drive"></i></div>
+        </div>
+        <span class="stat-label">Storage Used</span>
+        <div class="stat-value" id="storageUsed">0 MB</div>
+        <div class="stat-desc">of 100 GB available</div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-header">
+          <div class="stat-icon" style="color: #db2777; background: #fce7f3">
+            <i class="fa-solid fa-file-video"></i>
+          </div>
+        </div>
+        <span class="stat-label">Total Media</span>
+        <div class="stat-value" id="totalMedia">0</div>
+        <div class="stat-desc">files uploaded</div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-header">
+          <div class="stat-icon" style="color: #2563eb; background: #dbeafe">
+            <i class="fa-solid fa-wave-square"></i>
+          </div>
+        </div>
+        <span class="stat-label">Processing</span>
+        <div class="stat-value" id="processingCount">0</div>
+        <div class="stat-desc">files in queue</div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-header">
+          <div class="stat-icon" style="color: #7c3aed; background: #ede9fe">
+            <i class="fa-regular fa-circle-check"></i>
+          </div>
+        </div>
+        <span class="stat-label">Completed</span>
+        <div class="stat-value" id="completedCount">0</div>
+        <div class="stat-desc">successfully processed</div>
+      </div>
+    </div>
+
+    <div class="section-header">
+      <h2 class="section-title">Recent Media</h2>
+      <div class="section-actions">
+        <a href="#" class="btn-text" id="uploadBtn">
+          <i class="fa-solid fa-upload"></i> Upload Media
+        </a>
+
+        <input type="file" id="fileInput" style="display: none" />
+
+        <a href="{{ url_for('main_routes.all_media') }}" class="btn-text"
+          >View All <i class="fa-solid fa-arrow-right"></i
+        ></a>
+      </div>
+    </div>
+
+    <div class="filter-bar">
+      <div class="search-wrapper">
+        <i class="fa-solid fa-magnifying-glass"></i>
+        <input
+          type="text"
+          class="search-input"
+          id="searchInput"
+          placeholder="Search media..."
+        />
+      </div>
+      <div class="dropdown">
+        <select id="typeFilter">
+          <option>All Types</option>
+          <option>Video</option>
+          <option>Audio</option>
+          <option>Image</option>
+        </select>
+      </div>
+      <div class="dropdown">
+        <select id="statusFilter">
+          <option>All Status</option>
+          <option>Completed</option>
+          <option>Processing</option>
+        </select>
+      </div>
+      <span class="reset-filters" id="resetFilters">
+        <i class="fa-solid fa-rotate-right"></i> Reset
+      </span>
+    </div>
+    <div class="media-grid" id="mediaGrid"></div>
+  </div>
+</div>
+<script>
+  const userMenuBtn = document.getElementById("userMenuBtn");
+  const userDropdown = document.getElementById("userDropdown");
+
+  userMenuBtn.addEventListener("click", (e) => {
+    e.stopPropagation();
+    userDropdown.style.display =
+      userDropdown.style.display === "flex" ? "none" : "flex";
+  });
+
+  document.addEventListener("click", () => {
+    userDropdown.style.display = "none";
+    notificationDropdown.style.display = "none";
+  });
+  const notificationBtn = document.getElementById("notificationBtn");
+  const notificationDot = document.querySelector(".notification-dot");
+  const notificationDropdown = document.createElement("div");
+  notificationDropdown.id = "notificationDropdown";
+  notificationDropdown.style.display = "none";
+  notificationDropdown.style.position = "absolute";
+  notificationDropdown.style.top = "60px";
+  notificationDropdown.style.right = "20px";
+  notificationDropdown.style.zIndex = "1000";
+  document.body.appendChild(notificationDropdown);
+
+  function loadNotifications() {
+    fetch("/api/notifications")
+      .then((res) => res.json())
+      .then(({ notifications, unread_count }) => {
+        notificationDot.style.display = unread_count > 0 ? "block" : "none";
+
+        notificationDropdown.innerHTML = `
+        <div class="notification-header">Notifications</div>
+        ${
+          notifications.length
+            ? notifications
+                .map(
+                  (n) => `
+      <div class="notification-item ${n.read ? "" : "unread"}"
+           data-timestamp="${n.timestamp}">
+        <div class="notification-text">${n.description}</div>
+        <div class="notification-time">
+          ${new Date(n.timestamp).toLocaleString()}
+        </div>
+      </div>
+    `,
+                )
+                .join("")
+            : `<div class="notification-empty">You're all caught up ✨</div>`
+        }
+      `;
+      });
+  }
+
+  notificationBtn.addEventListener("click", (e) => {
+    e.stopPropagation();
+    notificationDropdown.style.display =
+      notificationDropdown.style.display === "block" ? "none" : "block";
+  });
+
+  notificationDropdown.addEventListener("click", (e) => {
+    const item = e.target.closest(".notification-item");
+    if (!item) return;
+
+    fetch(
+      `/api/notifications/read/${encodeURIComponent(item.dataset.timestamp)}`,
+      { method: "POST" },
+    ).then(loadNotifications);
+  });
+  function fetchUserStats() {
+    fetch("/user/stats")
+      .then((res) => res.json())
+      .then((stats) => {
+        document.getElementById("totalMedia").innerText = stats.total_media;
+        document.getElementById("processingCount").innerText = stats.processing;
+        document.getElementById("completedCount").innerText = stats.completed;
+        document.getElementById("storageUsed").innerText =
+          stats.storage_used + " MB";
+      });
+  }
+  const searchInput = document.getElementById("searchInput");
+  const typeFilter = document.getElementById("typeFilter");
+  const statusFilter = document.getElementById("statusFilter");
+  const resetBtn = document.getElementById("resetFilters");
+  const mediaGrid = document.getElementById("mediaGrid");
+  const uploadBtn = document.getElementById("uploadBtn");
+  const fileInput = document.getElementById("fileInput");
+
+  let mediaList = [];
+
+  function deleteMedia(id) {
+    fetch(`/delete/${id}`, { method: "DELETE" }).then(fetchFilteredMedia);
+  }
+
+  function renderMedia(list) {
+    mediaGrid.innerHTML = "";
+
+    const displayList = list.slice(0, 6);
+
+    if (displayList.length === 0) {
+      mediaGrid.innerHTML = `
+      <div class="empty-state">
+        <i class="fa-regular fa-folder-open"></i>
+        <p>No media uploaded yet</p>
+      </div>`;
+      return;
+    }
+
+    displayList.forEach((media) => {
+      mediaGrid.innerHTML += `
+      <div class="media-card">
+        <div class="card-thumb">
+          <img src="${
+            media.type === "audio" ? "/static/icons/audio_icon.png" : media.img
+          }" alt="Media" />
+          <div class="status-badge ${media.status.toLowerCase()}">
+            <span class="dot">●</span> ${media.status}
+          </div>
+          ${
+            (media.type === "audio" || media.type === "video") && media.duration
+              ? `<div class="duration-badge">${media.duration}</div>`
+              : ""
+          }
+        </div>
+
+        <div class="card-body">
+          <div class="media-title">
+            <span>${media.title}</span>
+            <i class="fa-solid ${
+              media.type === "audio"
+                ? "fa-music"
+                : media.type === "image"
+                  ? "fa-image"
+                  : "fa-video"
+            } media-type-icon"></i>
+          </div>
+
+          <div class="media-meta">
+            <span><i class="fa-regular fa-calendar"></i> ${
+              media.date_uploaded || "--:--"
+            }</span>
+            <span><i class="fa-solid fa-file"></i> ${media.size || "-- MB"}</span>
+          </div>
+
+          ${
+            media.status.toLowerCase() === "processing"
+              ? `
+            <div class="progress-container">
+              <div class="progress-label">
+                <span>Processing</span>
+                <span>${media.progress}%</span>
+              </div>
+              <div class="progress-track">
+                <div class="progress-fill" style="width:${media.progress}%"></div>
+              </div>
+            </div>`
+              : ""
+          }
+        </div>
+
+        <div class="card-footer">
+          <a href="/media/${media.id}" class="btn-view">
+            View Details <i class="fa-solid fa-arrow-right"></i>
+          </a>
+          <div class="card-actions-right">
+            <a href="/download/${media.id}" download>
+              <i class="fa-solid fa-download action-icon"></i>
+            </a>
+            <i class="fa-solid fa-trash action-icon delete-btn" onclick="deleteMedia(${media.id})"></i>
+          </div>
+        </div>
+      </div>
+    `;
+    });
+  }
+
+  function fetchFilteredMedia() {
+    const params = new URLSearchParams({
+      search: searchInput.value,
+      type: typeFilter.value,
+      status: statusFilter.value,
+    });
+
+    fetch(`/filter?${params}`)
+      .then((res) => res.json())
+      .then((data) => {
+        if (!Array.isArray(data)) return;
+        mediaList = data;
+        renderMedia(mediaList);
+
+        const hasProcessing = data.some(
+          (m) => m.status.toLowerCase() === "processing",
+        );
+
+        if (hasProcessing) startMediaPolling();
+        else stopMediaPolling();
+      });
+  }
+
+  let mediaPollInterval = null;
+
+  function startMediaPolling() {
+    if (mediaPollInterval) return;
+    mediaPollInterval = setInterval(fetchFilteredMedia, 2000);
+  }
+
+  function stopMediaPolling() {
+    clearInterval(mediaPollInterval);
+    mediaPollInterval = null;
+  }
+
+  uploadBtn.addEventListener("click", () => fileInput.click());
+
+  fileInput.addEventListener("change", () => {
+    const file = fileInput.files[0];
+    if (!file) return;
+
+    const formData = new FormData();
+    formData.append("file", file);
+
+    fetch("/upload", { method: "POST", body: formData })
+      .then((res) => res.json())
+      .then((data) => {
+        mediaList.unshift({
+          id: data.media_id,
+          title: file.name,
+          type: file.type.startsWith("image")
+            ? "image"
+            : file.type.startsWith("audio")
+              ? "audio"
+              : "video",
+          status: "Processing",
+          progress: 0,
+          img: file.type.startsWith("image")
+            ? URL.createObjectURL(file)
+            : "/static/icons/audio_icon.png",
+        });
+
+        renderMedia(mediaList);
+        startMediaPolling();
+      });
+  });
+
+  searchInput.addEventListener("input", fetchFilteredMedia);
+  typeFilter.addEventListener("change", fetchFilteredMedia);
+  statusFilter.addEventListener("change", fetchFilteredMedia);
+  resetBtn.addEventListener("click", () => {
+    searchInput.value = "";
+    typeFilter.value = "All Types";
+    statusFilter.value = "All Status";
+    fetchFilteredMedia();
+  });
+
+  fetchFilteredMedia();
+  fetchUserStats();
+  loadNotifications();
+  setInterval(fetchUserStats, 5000);
+  setInterval(loadNotifications, 5000);
+  setInterval(fetchFilteredMedia, 8000);
+</script>
+
+{% endblock %}

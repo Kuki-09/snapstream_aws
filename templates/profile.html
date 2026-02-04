@@ -1,0 +1,87 @@
+{% extends "base.html" %} {% block title %}Profile | SnapStream{% endblock %} {%
+block content %}
+<div class="profile-page">
+  <div class="container">
+    <h1 class="page-title">Profile</h1>
+    <p class="page-subtitle">Your account information and usage summary</p>
+    <div class="profile-card">
+      <div class="profile-avatar">
+        <div class="avatar-circle">{{ initials }}</div>
+      </div>
+
+      <div class="profile-info">
+        <div class="info-group">
+          <label>Full Name</label>
+          <input type="text" value="{{ full_name }}" readonly />
+        </div>
+
+        <div class="info-group">
+          <label>Email</label>
+          <input type="email" value="{{ email }}" readonly />
+        </div>
+
+        <div class="info-group">
+          <label>Role</label>
+          <input type="text" value="{{ role }}" readonly />
+        </div>
+
+        <div class="info-group">
+          <label>Account Created On</label>
+          <input type="text" value="{{ created_on }}" readonly />
+        </div>
+      </div>
+    </div>
+    <div class="usage-card">
+      <h3>Media Usage</h3>
+      <div class="usage-grid">
+        <div class="usage-item">
+          <span>Total</span>
+          <strong>{{ total_media }}</strong>
+        </div>
+        <div class="usage-item">
+          <span>Images</span>
+          <strong>{{ images }}</strong>
+        </div>
+        <div class="usage-item">
+          <span>Videos</span>
+          <strong>{{ videos }}</strong>
+        </div>
+        <div class="usage-item">
+          <span>Audio</span>
+          <strong>{{ audios }}</strong>
+        </div>
+      </div>
+    </div>
+    <button class="btn-danger" id="deleteAccountBtn">
+      <i class="fa-solid fa-trash"></i> Delete Account
+    </button>
+  </div>
+</div>
+<div class="modal-overlay" id="deleteModal">
+  <div class="modal">
+    <button class="modal-close" id="closeModal">&times;</button>
+    <h2>Delete Account</h2>
+    <p>
+      This action cannot be undone. All your media and AI data will be
+      permanently removed.
+    </p>
+
+    <div class="modal-actions">
+      <button class="btn-secondary" id="cancelDelete">Cancel</button>
+      <form method="POST" action="{{ url_for('main_routes.delete_account') }}">
+        <button class="btn-danger" type="submit">Yes, Delete</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script>
+  const modal = document.getElementById("deleteModal");
+  document.getElementById("deleteAccountBtn").onclick = () =>
+    (modal.style.display = "flex");
+  document.getElementById("cancelDelete").onclick = () =>
+    (modal.style.display = "none");
+  document.getElementById("closeModal").onclick = () =>
+    (modal.style.display = "none");
+</script>
+{% endblock %}

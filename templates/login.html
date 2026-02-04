@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SnapStream | Login</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='style.css') }}"
+    />
+  </head>
+
+  <body class="auth-page">
+    <div class="auth-body">
+      <div class="login-card">
+        <h1>Welcome Back</h1>
+        <p class="subtitle">Sign in to access your media dashboard</p>
+
+        <form method="POST">
+          <label>Email Address <span>*</span></label>
+          <input
+            type="email"
+            name="email"
+            placeholder="Enter your email"
+            required
+          />
+
+          <label>Password <span>*</span></label>
+          <div class="password-wrapper">
+            <input
+              type="password"
+              name="password"
+              id="password"
+              placeholder="Enter your password"
+              required
+            />
+            <button type="button" id="togglePassword" class="eye-btn">
+              <i data-feather="eye"></i>
+            </button>
+          </div>
+
+          <a class="forgot" href="{{ url_for('main_routes.forgot_password') }}"
+            >Forgot Password?</a
+          >
+
+          <button type="submit" class="btn-primary">Sign In →</button>
+        </form>
+
+        <p class="bottom-text">New User? <a href="/signup">Sign Up</a></p>
+
+        <p class="admin-link">
+          🛡 <a href="/admin_login">Admin Login Portal</a>
+        </p>
+      </div>
+    </div>
+    <div id="toast-container"></div>
+    <script src="https://unpkg.com/feather-icons"></script>
+    <script>
+          feather.replace();
+
+          const toggleBtn = document.getElementById("togglePassword");
+          const passwordInput = document.getElementById("password");
+
+          toggleBtn.addEventListener("click", () => {
+            const isPassword = passwordInput.type === "password";
+            passwordInput.type = isPassword ? "text" : "password";
+            toggleBtn.innerHTML = isPassword
+              ? feather.icons["eye-off"].toSvg()
+              : feather.icons["eye"].toSvg();
+          });
+        function showToast(message, type="info") {
+        const container = document.getElementById("toast-container");
+        if (!container) return;
+        const toast = document.createElement("div");
+        toast.className = `toast toast-${type}`;
+        toast.textContent = message;
+
+        container.appendChild(toast);
+        setTimeout(() => {
+          toast.classList.add("toast-hide");
+          toast.addEventListener("transitionend", () => toast.remove());
+        }, 3000);
+      }
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+          {% for category, message in messages %}
+            showToast("{{ message }}", "{{ category }}");
+          {% endfor %}
+        {% endif %}
+      {% endwith %}
+    </script>
+  </body>
+</html>

@@ -1,0 +1,63 @@
+{% extends "base.html" %} {% block title %}{{ media.title }} | SnapStream{%
+endblock %} {% block content %}
+<div class="container media-analysis-page">
+  <div class="media-header">
+    <h2>{{ media.title }}</h2>
+    <span class="media-type">{{ media.type | capitalize }}</span>
+  </div>
+  <div class="media-preview">
+    {% if media.type == "image" %}
+    <img
+      src="{{ url_for('main_routes.uploaded_file', filename=media.file_path) }}"
+      alt="{{ media.title }}"
+      class="media-img"
+    />
+    {% elif media.type == "audio" %}
+    <audio
+      controls
+      class="media-audio"
+      src="{{ url_for('main_routes.uploaded_file', filename=media.file_path) }}"
+    ></audio>
+    {% elif media.type == "video" %}
+    <video
+      controls
+      class="video-player"
+      src="{{ url_for('main_routes.uploaded_file', filename=media.file_path) }}"
+      preload="metadata"
+      poster=""
+    ></video>
+    {% endif %}
+  </div>
+  <div class="media-info">
+    <div class="info-item">
+      <span class="label">Status</span>
+      <span class="value">{{ media.status }}</span>
+    </div>
+    <div class="info-item">
+      <span class="label">Progress</span>
+      <span class="value">{{ media.progress }}%</span>
+    </div>
+  </div>
+
+  {% for key, value in media.ai_metadata.items() %} {% if key != 'thumbnail' %}
+  <div class="ai-card">
+    <h4>{{ key | replace("_", " ") | capitalize }}</h4>
+    {% if value is mapping %}
+    <ul>
+      {% for k, v in value.items() %}
+      <li><strong>{{ k | replace("_", " ") }}:</strong> {{ v }}</li>
+      {% endfor %}
+    </ul>
+    {% elif value is iterable and value is not string %}
+    <ul>
+      {% for item in value %}
+      <li>{{ item }}</li>
+      {% endfor %}
+    </ul>
+    {% else %}
+    <p>{{ value }}</p>
+    {% endif %}
+  </div>
+  {% endif %} {% endfor %}
+</div>
+{% endblock %}

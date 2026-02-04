@@ -1,0 +1,188 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap");
+
+.auth-page,
+.auth-page * {
+  box-sizing: border-box;
+  font-family: "Inter", sans-serif;
+}
+
+.auth-page .auth-body {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 80px 20px;
+}
+
+.auth-page .login-card {
+  width: 100%;
+  max-width: 420px;
+  background: #ffffff;
+  padding: 40px;
+  border-radius: 16px;
+  border: 1px solid #e5e7eb;
+  box-shadow:
+    0 10px 15px -3px rgba(0, 0, 0, 0.1),
+    0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  text-align: center;
+}
+
+.auth-page.signup-page .signup-card {
+  width: 100%;
+  max-width: 480px;
+  background: #ffffff;
+  padding: 40px;
+  border-radius: 16px;
+  border: 1px solid #e5e7eb;
+  box-shadow:
+    0 10px 15px -3px rgba(0, 0, 0, 0.1),
+    0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+.auth-page .admin-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 20px;
+}
+
+.auth-page .admin-header .icon-box i {
+  font-size: 32px;
+  color: #111827;
+}
+
+.auth-page h1 {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #111827;
+  margin: 0;
+}
+
+.auth-page .subtitle {
+  font-size: 0.95rem;
+  color: #6b7280;
+  margin: 0;
+}
+
+.auth-page form {
+  text-align: left;
+  margin-top: 12px;
+}
+
+.auth-page label {
+  display: block;
+  font-weight: 600;
+  font-size: 0.875rem;
+  margin-bottom: 6px;
+  color: #111827;
+}
+
+.auth-page label span {
+  color: #ef4444;
+}
+
+.auth-page input {
+  width: 100%;
+  padding: 12px 16px;
+  border-radius: 8px;
+  border: 1px solid #d1d5db;
+  font-size: 0.95rem;
+  margin-bottom: 16px;
+  outline: none;
+}
+
+.auth-page input:focus {
+  border-color: #5850ec;
+  box-shadow: 0 0 0 3px rgba(88, 80, 236, 0.1);
+}
+
+.auth-page .password-wrapper,
+.auth-page .password-wrapper-signup,
+.auth-page .password-wrapper-reset {
+  position: relative;
+}
+
+.auth-page .eye-btn,
+.auth-page .eye-btn-signup,
+.auth-page .eye-btn-reset {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  color: #6b7280;
+  font-size: 20px;
+}
+.auth-page .btn-primary {
+  width: 100%;
+  padding: 14px;
+  background-color: #5850ec;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.auth-page .btn-primary:hover {
+  background-color: #4338ca;
+}
+
+.auth-page .forgot {
+  display: block;
+  margin-bottom: 16px;
+  font-size: 0.9rem;
+  color: #5850ec;
+  text-decoration: none;
+}
+
+.auth-page .bottom-text {
+  margin-top: 16px;
+  font-size: 0.9rem;
+  text-align: center;
+  color: #6b7280;
+}
+
+.auth-page .bottom-text a {
+  color: #5850ec;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.auth-page #toast-container {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.auth-page .toast {
+  min-width: 250px;
+  max-width: 350px;
+  padding: 14px 20px;
+  border-radius: 10px;
+  color: #fff;
+  font-weight: 600;
+  font-size: 0.95rem;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.3);
+  text-align: center;
+}
+
+.auth-page .toast-success {
+  background-color: #28a745;
+}
+
+.auth-page .toast-error {
+  background-color: #dc3545;
+}
+body.auth-page {
+background: linear-gradient(135deg,  #d6d6f6, #ffeef6);
+}
+
+
+

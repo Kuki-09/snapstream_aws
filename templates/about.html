@@ -1,0 +1,562 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+    />
+
+    <title>About - SnapStream</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Inter", sans-serif;
+      }
+      :root {
+        --primary: #6366f1;
+      }
+
+      body {
+        background-color: var(--bg-body, #f9fafb);
+        color: var(--text-main, #111827);
+        margin: 0;
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+      }
+     .page-content {
+       flex: 1; 
+      }
+
+      /* Navigation */
+      nav {
+        background-color: white;
+        border-bottom: 1px solid #e5e7eb;
+        padding: 1rem 2rem;
+      }
+
+      .nav-container {
+        max-width: 1400px;
+        margin: 0 auto;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .logo {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-weight: 700;
+        font-size: 1.2rem;
+        color: #333;
+      }
+      .logo-icon {
+        background-color: var(--primary);
+        color: white;
+        width: 32px;
+        height: 32px;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .nav-links {
+        display: flex;
+        align-items: center;
+        gap: 2rem;
+      }
+
+      .nav-links a {
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.5rem 1rem;
+        border-radius: 8px;
+        transition: all 0.3s;
+        font-size: 0.95rem;
+      }
+
+      .nav-links a.home {
+        color: #6b7280;
+      }
+
+      .nav-links a.home:hover {
+        color: #111827;
+      }
+
+      .nav-links a.about {
+        color: #6b7280;
+      }
+
+      .nav-link.active {
+        background-color: #eef2ff;
+        color: var(--primary);
+      }
+
+      /* Hero Section */
+      .hero {
+        display: flex;
+        justify-content: center;
+        padding: 5rem 2rem;
+        background-color: #f9fafb;
+      }
+
+      .hero-icon {
+        margin: 0 auto 1.5rem auto;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .hero-container {
+        max-width: 1200px;
+        width: 100%;
+        background: linear-gradient(135deg, #eef2ff 0%, #ede9fe 100%);
+        border-radius: 20px;
+        padding: 4rem 2rem;
+        text-align: center;
+        box-shadow: 0 10px 30px rgba(99, 102, 241, 0.1);
+      }
+
+      h1 {
+        font-size: 1.8rem;
+        font-weight: 700;
+        margin-bottom: 8px;
+      }
+
+      .hero p {
+        font-size: 1.125rem;
+        color: #6b7280;
+        line-height: 1.75;
+        margin-bottom: 3rem;
+      }
+
+      .hero-features {
+        display: flex;
+        justify-content: center;
+        gap: 3rem;
+        flex-wrap: wrap;
+      }
+
+      .hero-feature {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        color: #374151;
+        font-weight: 500;
+      }
+
+      .hero-feature svg {
+        width: 20px;
+        height: 20px;
+      }
+
+      /* Features Section */
+      .features {
+        padding: 5rem 2rem;
+        background-color: white;
+      }
+
+      .features-container {
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+
+      .section-header {
+        text-align: center;
+        margin-bottom: 3rem;
+      }
+
+      .section-header h2 {
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: #111827;
+        margin-bottom: 1rem;
+      }
+
+      .section-header p {
+        font-size: 1.125rem;
+        color: #6b7280;
+        line-height: 1.75;
+        max-width: 800px;
+        margin: 0 auto;
+      }
+
+      .features-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+        gap: 2rem;
+        margin-top: 3rem;
+      }
+
+      .feature-card {
+        background: #f9fafb;
+        border: 1px solid #e5e7eb;
+        border-radius: 16px;
+        padding: 2rem;
+        transition: all 0.3s;
+      }
+
+      .feature-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+      }
+
+      .feature-icon {
+        width: 56px;
+        height: 56px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 1.5rem;
+      }
+
+      .feature-icon.upload {
+        background: #dbeafe;
+      }
+
+      .feature-icon.brain {
+        background: #fce7f3;
+      }
+
+      .feature-icon.zap {
+        background: #dbeafe;
+      }
+
+      .feature-icon.database {
+        background: #fce7f3;
+      }
+
+      .feature-icon svg {
+        width: 28px;
+        height: 28px;
+        stroke-width: 2;
+      }
+
+      .feature-icon.upload svg {
+        stroke: #3b82f6;
+      }
+      .feature-icon.brain svg {
+        stroke: #ec4899;
+      }
+      .feature-icon.zap svg {
+        stroke: #6366f1;
+      }
+      .feature-icon.database svg {
+        stroke: #ec4899;
+      }
+
+      .feature-card h3 {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #111827;
+        margin-bottom: 1rem;
+      }
+
+      .feature-card p {
+        font-size: 1rem;
+        color: #6b7280;
+        line-height: 1.75;
+      }
+
+      /* How It Works Section */
+      .how-it-works {
+        padding: 5rem 2rem;
+        background-color: #f9fafb;
+      }
+
+      .works-container {
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+
+      .steps-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 2rem;
+        margin-top: 3rem;
+      }
+
+      .step-card {
+        background: white;
+        border: 1px solid #e5e7eb;
+        border-radius: 16px;
+        padding: 2rem;
+        position: relative;
+      }
+
+      .step-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 1.5rem;
+      }
+
+      .step-number {
+        font-size: 3rem;
+        font-weight: 700;
+        color: #e5e7eb;
+      }
+
+      .step-icon {
+        width: 48px;
+        height: 48px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .step-card:nth-child(1) .step-number { color: #dbeafe; }
+      .step-card:nth-child(2) .step-number { color: #fce7f3; }
+      .step-card:nth-child(3) .step-number { color: #dbeafe; }
+      .step-card:nth-child(4) .step-number { color: #dbeafe; }
+
+      .step-card:nth-child(1) .step-icon { background: #dbeafe; }
+      .step-card:nth-child(2) .step-icon { background: #fce7f3; }
+      .step-card:nth-child(3) .step-icon { background: #dbeafe; }
+      .step-card:nth-child(4) .step-icon { background: #dbeafe; }
+
+      .step-icon svg { width: 24px; height: 24px; stroke-width: 2; }
+      .step-card:nth-child(1) .step-icon svg { stroke: #3b82f6; }
+      .step-card:nth-child(2) .step-icon svg { stroke: #ec4899; }
+      .step-card:nth-child(3) .step-icon svg { stroke: #3b82f6; }
+      .step-card:nth-child(4) .step-icon svg { stroke: #6366f1; }
+
+      .step-card h3 {
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: #111827;
+        margin-bottom: 1rem;
+      }
+
+      .step-card p {
+        font-size: 0.95rem;
+        color: #6b7280;
+        line-height: 1.75;
+      }
+
+      .step-arrow {
+        position: absolute;
+        right: -1rem;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #e5e7eb;
+      }
+
+      .step-card:last-child .step-arrow { display: none; }
+
+      /* Footer */
+      footer {
+        background-color: white;
+        border-top: 1px solid #e5e7eb;
+        padding: 2rem;
+        text-align: center;
+      }
+
+      footer p {
+        color: #6b7280;
+        font-size: 0.95rem;
+        margin-bottom: 0.5rem;
+      }
+
+      @media (max-width: 768px) {
+        .hero h1 { font-size: 2rem; }
+        .section-header h2 { font-size: 2rem; }
+        .features-grid, .steps-grid { grid-template-columns: 1fr; }
+        .nav-links { gap: 1rem; }
+        .step-arrow { display: none; }
+      }
+    </style>
+  </head>
+  <body>
+    <nav>
+      <div class="nav-container">
+        <div class="logo">
+          <div class="logo-icon">
+            <i class="fa-solid fa-bolt"></i>
+          </div>
+          SnapStream
+        </div>
+
+        <div class="nav-links">
+          {% if session.get("admin") %}
+            <a href="{{ url_for('main_routes.admin_dashboard') }}" class="nav-link home">
+          {% else %}
+            <a href="{{ url_for('main_routes.dashboard') }}" class="nav-link home">
+          {% endif %}
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M9 22V12h6v10" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            Home
+          </a>
+          <a href="/about" class="about nav-link active">
+            <i class="fa-regular fa-circle-question"></i> About
+          </a>
+        </div>
+      </div>
+    </nav>
+<main class="page-content">
+    <section class="hero">
+      <div class="hero-container">
+        <div class="hero-icon logo-icon">
+          <i class="fa-solid fa-bolt"></i>
+        </div>
+        <h1>Welcome to SnapStream</h1>
+        <p>
+          Your intelligent media platform that transforms how you upload, search, <br>
+          and analyze multimedia content with AI-powered automation.
+        </p>
+        <div class="hero-features">
+          <div class="hero-feature">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#3b82f6">
+              <path d="M13 3L6 14h5l-1 7 7-11h-5l1-7z" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            Fast Upload
+          </div>
+          <div class="hero-feature">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#ec4899">
+              <path d="M12 2a10 10 0 100 20 10 10 0 000-20z" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M12 6v6l4 2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            AI Analysis
+          </div>
+          <div class="hero-feature">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#3b82f6">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            Smart Search
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="features">
+      <div class="features-container">
+        <div class="section-header">
+          <h2>Powerful Features</h2>
+          <p>Manage, analyze, and search your media effortlessly with AI-powered automation.</p>
+        </div>
+        <div class="features-grid">
+          <div class="feature-card">
+            <div class="feature-icon upload">
+              <svg viewBox="0 0 24 24" fill="none">
+                <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+            <h3>Lightning-Fast Upload</h3>
+            <p>Drag and drop images, videos, or audio files. SnapStream handles the rest automatically.</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon brain">
+              <svg viewBox="0 0 24 24" fill="none">
+                <path d="M12 2a10 10 0 100 20 10 10 0 000-20z" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M12 6v6l4 2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+            <h3>AI-Powered Analysis</h3>
+            <p>Automatically detect objects, faces, and text to generate searchable metadata and transcripts.</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon zap">
+              <svg viewBox="0 0 24 24" fill="none">
+                <path d="M13 2L3 14h8l-2 8 10-12h-8l2-8z" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+            <h3>Real-Time Processing</h3>
+            <p>Watch your media get analyzed live with progress updates as it happens.</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon database">
+              <svg viewBox="0 0 24 24" fill="none">
+                <ellipse cx="12" cy="5" rx="9" ry="3" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+            <h3>Smart Search</h3>
+            <p>Find any media instantly by detected objects, faces, text, or tags — even across thousands of files.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="how-it-works">
+      <div class="works-container">
+        <div class="section-header">
+          <h2>How SnapStream Works</h2>
+          <p>From upload to insights in four simple steps. Our workflow handles everything automatically.</p>
+        </div>
+        <div class="steps-grid">
+          <div class="step-card">
+            <div class="step-header">
+              <div class="step-number">01</div>
+              <div class="step-icon">
+                <svg viewBox="0 0 24 24" fill="none">
+                  <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </div>
+            </div>
+            <h3>Upload Media</h3>
+            <p>Drag and drop files or select from your device. SnapStream prepares your media automatically.</p>
+          </div>
+          <div class="step-card">
+            <div class="step-header">
+              <div class="step-number">02</div>
+              <div class="step-icon">
+                <svg viewBox="0 0 24 24" fill="none">
+                  <path d="M12 2a10 10 0 100 20 10 10 0 000-20z" stroke-linecap="round" stroke-linejoin="round"/>
+                  <path d="M12 6v6l4 2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </div>
+            </div>
+            <h3>AI Processing</h3>
+            <p>Analyze content in real-time, extracting metadata, tags, and generating transcripts.</p>
+          </div>
+          <div class="step-card">
+            <div class="step-header">
+              <div class="step-number">03</div>
+              <div class="step-icon">
+                <svg viewBox="0 0 24 24" fill="none">
+                  <path d="M20 10a1 1 0 0 0 1-1V6a1 1 0 0 0-1-1h-2.5a1 1 0 0 1-.8-.4l-.9-1.2A1 1 0 0 0 15 3h-2a1 1 0 0 0-1 1v5a1 1 0 0 0 1 1Z" stroke-linecap="round" stroke-linejoin="round"/>
+                  <path d="M20 21a1 1 0 0 0 1-1v-3a1 1 0 0 0-1-1h-2.9a1 1 0 0 1-.88-.55l-.42-.85a1 1 0 0 0-.92-.6H13a1 1 0 0 0-1 1v5a1 1 0 0 0 1 1Z" stroke-linecap="round" stroke-linejoin="round"/>
+                  <path d="M3 5a2 2 0 0 0 2 2h3" stroke-linecap="round" stroke-linejoin="round"/>
+                  <path d="M3 3v13a2 2 0 0 0 2 2h3" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </div>
+            </div>
+            <h3>Smart Organization</h3>
+            <p>Media is automatically categorized and indexed for instant search and retrieval.</p>
+          </div>
+          <div class="step-card">
+            <div class="step-header">
+              <div class="step-number">04</div>
+              <div class="step-icon">
+                <svg viewBox="0 0 24 24" fill="none">
+                  <path d="M3 3v18h18" stroke-linecap="round" stroke-linejoin="round"/>
+                  <path d="M18.7 8l-5.1 5.2-2.8-2.7L7 14.3" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </div>
+            </div>
+            <h3>Insights & Analytics</h3>
+            <p>View your total media uploaded and storage usage for a quick overview of your media library.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+</main>
+    <footer>
+      <p>© 2026 SnapStream. All rights reserved.</p>
+      <p>Built with AI-powered media management for modern content creators.</p>
+    </footer>
+  </body>
+</html>

@@ -1,0 +1,162 @@
+{% extends "base.html" %} {% block title %}All Media | SnapStream{% endblock %}
+{% block content %}
+<div class="all-media-page">
+  <div class="container">
+    <div class="header-section">
+      <h1>All Media</h1>
+      <p class="subtitle">Browse and manage all your uploaded media files</p>
+    </div>
+    <div class="filter-bar">
+      <div class="search-wrapper">
+        <i class="fa-solid fa-magnifying-glass"></i>
+        <input
+          type="text"
+          class="search-input"
+          id="searchInput"
+          placeholder="Search media..."
+        />
+      </div>
+      <div class="dropdown">
+        <select id="typeFilter">
+          <option>All Types</option>
+          <option>Video</option>
+          <option>Audio</option>
+          <option>Image</option>
+        </select>
+      </div>
+      <div class="dropdown">
+        <select id="statusFilter">
+          <option>All Status</option>
+          <option>Completed</option>
+          <option>Processing</option>
+        </select>
+      </div>
+      <span class="reset-filters" id="resetFilters">
+        <i class="fa-solid fa-rotate-right"></i> Reset
+      </span>
+    </div>
+    <div class="media-grid" id="mediaGrid"></div>
+  </div>
+</div>
+
+<script>
+  const searchInput = document.getElementById("searchInput");
+  const typeFilter = document.getElementById("typeFilter");
+  const statusFilter = document.getElementById("statusFilter");
+  const resetBtn = document.getElementById("resetFilters");
+  const mediaGrid = document.getElementById("mediaGrid");
+
+  function fetchFilteredMedia() {
+    const params = new URLSearchParams({
+      search: searchInput.value,
+      type: typeFilter.value,
+      status: statusFilter.value,
+    });
+
+    fetch(`/filter?${params.toString()}`)
+      .then((res) => res.json())
+      .then((data) => renderMedia(data));
+  }
+
+  function renderMedia(mediaList) {
+    mediaGrid.innerHTML = "";
+
+    if (mediaList.length === 0) {
+      mediaGrid.innerHTML = `
+        <div class="empty-state">
+          <i class="fa-regular fa-folder-open"></i>
+          <p>No media uploaded yet</p>
+        </div>
+      `;
+      return;
+    }
+
+    mediaList.forEach((media) => {
+      mediaGrid.innerHTML += `
+        <div class="media-card">
+          <div class="card-thumb">
+            <img src="${
+              media.type === "audio"
+                ? "/static/icons/audio_icon.png"
+                : media.img
+            }" alt="Media" />
+
+            <div class="status-badge ${media.status.toLowerCase()}">
+              <span class="dot">●</span> ${media.status}
+            </div>
+            ${
+              (media.type === "audio" || media.type === "video") &&
+              media.duration
+                ? `<div class="duration-badge">${media.duration}</div>`
+                : ""
+            }
+          </div>
+
+          <div class="card-body">
+            <div class="media-title">
+              <span>${media.title}</span>
+              <i class="fa-solid ${
+                media.type === "audio"
+                  ? "fa-music"
+                  : media.type === "image"
+                    ? "fa-image"
+                    : "fa-video"
+              } media-type-icon"></i>
+            </div>
+
+            <div class="media-meta">
+              <span><i class="fa-regular fa-calendar"></i> ${media.date_uploaded}</span>
+              <span><i class="fa-solid fa-file"></i> ${media.size}</span>
+            </div>
+
+            ${
+              media.status === "Processing" && media.type !== "image"
+                ? `
+                <div class="progress-container">
+                  <div class="progress-label">
+                    <span>Processing</span>
+                    <span>${media.progress}%</span>
+                  </div>
+                  <div class="progress-track">
+                    <div class="progress-fill" style="width:${media.progress}%"></div>
+                  </div>
+                </div>`
+                : ""
+            }
+          </div>
+
+          <div class="card-footer">
+            <a href="/media/${media.id}" class="btn-view">
+              View Details <i class="fa-solid fa-arrow-right"></i>
+            </a>
+            <div class="card-actions-right">
+              <a href="/download/${media.id}" download>
+  <i class="fa-solid fa-download action-icon"></i>
+</a>
+
+              <i class="fa-solid fa-trash action-icon delete-btn" onclick="deleteMedia(${media.id})"></i>
+            </div>
+          </div>
+        </div>
+      `;
+    });
+  }
+
+  function deleteMedia(id) {
+    fetch(`/delete/${id}`, { method: "DELETE" }).then(() =>
+      fetchFilteredMedia(),
+    );
+  }
+  fetchFilteredMedia();
+  searchInput.addEventListener("input", fetchFilteredMedia);
+  typeFilter.addEventListener("change", fetchFilteredMedia);
+  statusFilter.addEventListener("change", fetchFilteredMedia);
+
+  resetBtn.addEventListener("click", () => {
+    searchInput.value = "";
+    typeFilter.value = "All Types";
+    statusFilter.value = "All Status";
+    fetchFilteredMedia();
+  });
+</script>
+{% endblock %}

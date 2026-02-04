@@ -1,0 +1,34 @@
+<div class="analytics-grid">
+  <div class="card large">
+    <h3>Processing Queue Status</h3>
+    <canvas id="processingChart"></canvas>
+  </div>
+  <div class="card storage-card">
+    <h3>Storage Utilization</h3>
+
+    <div class="storage-grid">
+      <div class="storage-left">
+        <span class="storage-percent" id="storagePercent">100%</span>
+        <span class="storage-used" id="storageUsed">500 GB / 500 GB</span>
+      </div>
+
+      <div class="storage-middle">
+        <div class="storage-bar">
+          <div class="storage-fill" id="storageFill" style="width: 100%"></div>
+        </div>
+      </div>
+
+      <div class="storage-right storage-list">
+        <div class="storage-item video">
+          <span>Video Files</span><strong id="videoSize">250 GB</strong>
+        </div>
+        <div class="storage-item audio">
+          <span>Audio Files</span><strong id="audioSize">150 GB</strong>
+        </div>
+        <div class="storage-item image">
+          <span>Images</span><strong id="imageSize">100 GB</strong>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

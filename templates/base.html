@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{% block title %}SnapStream{% endblock %}</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='style.css') }}"
+    />
+  </head>
+  <body>
+    <nav>
+      <div class="nav-left">
+        <div class="logo">
+          <div class="logo-icon"><i class="fa-solid fa-bolt"></i></div>
+          SnapStream
+        </div>
+      </div>
+      <div class="nav-right">
+        {% if session.get("user") %}
+        <a
+          href="{{ url_for('main_routes.dashboard') }}"
+          class="nav-link {% if active=='dashboard' %}active{% endif %}"
+        >
+          <svg
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+          >
+            <path
+              d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+            <path
+              d="M9 22V12h6v10"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+          Home
+        </a>
+        {% endif %}
+        <a
+          href="{{ url_for('main_routes.about') }}"
+          class="nav-link {% if active=='about' %}active{% endif %}"
+        >
+          <i class="fa-regular fa-circle-question"></i> About
+        </a>
+        {% if show_notifications is not defined or show_notifications %}
+        <button class="icon-btn" id="notificationBtn">
+          <i class="fa-regular fa-bell"></i>
+          <div class="notification-dot"></div>
+        </button>
+        {% endif %}
+
+        <div class="user-menu">
+          <div class="user-avatar">{{ initials if initials else "?" }}</div>
+
+          <button class="icon-btn" id="userMenuBtn">
+            <i class="fa-solid fa-chevron-down"></i>
+          </button>
+          <div class="user-dropdown" id="userDropdown">
+            <a href="{{ url_for('main_routes.profile') }}">
+              <i class="fa-regular fa-user"></i> Profile
+            </a>
+            <div class="divider"></div>
+            <a href="{{ url_for('main_routes.logout') }}" class="logout">
+              <i class="fa-solid fa-right-from-bracket"></i> Logout
+            </a>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    {% block content %}{% endblock %}
+    <footer>
+      <p>© 2026 SnapStream. All rights reserved.</p>
+      <p>Built with cutting-edge AI technology for modern content creators.</p>
+    </footer>
+
+    <script>
+      const userMenuBtn = document.getElementById("userMenuBtn");
+      const userDropdown = document.getElementById("userDropdown");
+
+      userMenuBtn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        userDropdown.style.display =
+          userDropdown.style.display === "flex" ? "none" : "flex";
+      });
+
+      document.addEventListener("click", () => {
+        userDropdown.style.display = "none";
+        notificationDropdown.style.display = "none";
+      });
+
+      const notificationBtn = document.getElementById("notificationBtn");
+      const notificationDot = document.querySelector(".notification-dot");
+
+      const notificationDropdown = document.createElement("div");
+      notificationDropdown.id = "notificationDropdown";
+      notificationDropdown.style.display = "none";
+      notificationDropdown.style.position = "fixed";
+      notificationDropdown.style.top = "64px";
+      notificationDropdown.style.right = "24px";
+      notificationDropdown.style.zIndex = "9999";
+      document.body.appendChild(notificationDropdown);
+
+      let hasUnread = false;
+
+      async function loadNotifications() {
+        const res = await fetch("/api/notifications");
+        if (!res.ok) return;
+
+        const { notifications, unread_count } = await res.json();
+
+        hasUnread = unread_count > 0;
+        notificationDot.style.display = hasUnread ? "block" : "none";
+
+        notificationDropdown.innerHTML = `
+      <div class="notification-header">Notifications</div>
+      ${
+        notifications.length
+          ? notifications
+              .map(
+                (n) => `
+        <div class="notification-item ${
+          n.read ? "" : "unread"
+        }" data-timestamp="${n.timestamp}">
+          <div class="notification-text">${n.description}</div>
+          <div class="notification-time">
+            ${new Date(n.timestamp).toLocaleString()}
+          </div>
+        </div>
+      `,
+              )
+              .join("")
+          : `<div class="notification-empty">You're all caught up ✨</div>`
+      }
+    `;
+      }
+      notificationBtn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        notificationDropdown.style.display =
+          notificationDropdown.style.display === "block" ? "none" : "block";
+      });
+      notificationDropdown.addEventListener("click", async (e) => {
+        const item = e.target.closest(".notification-item");
+        if (!item) return;
+        const timestamp = item.dataset.timestamp;
+
+        await fetch(
+          `/api/notifications/read/${encodeURIComponent(timestamp)}`,
+          { method: "POST" },
+        );
+
+        item.classList.remove("unread");
+        loadNotifications();
+      });
+      loadNotifications();
+      setInterval(loadNotifications, 30000);
+    </script>
+  </body>
+</html>

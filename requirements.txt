@@ -1,0 +1,30 @@
+# ---------- Core Web ----------
+Flask==3.1.2
+Werkzeug==3.1.5
+Jinja2==3.1.2
+
+# ---------- AWS ----------
+boto3==1.34.29
+
+# ---------- Async / Background ----------
+celery==5.3.6
+redis==5.0.1
+
+# ---------- ML / AI Core ----------
+torch==2.2.1
+torchvision==0.17.1
+
+# ---------- Audio / NLP ----------
+openai-whisper==20231117
+spacy==3.7.2
+textblob==0.17.1
+
+# ---------- Vision / OCR ----------
+ultralytics==8.1.13
+opencv-python==4.9.0.80
+pytesseract==0.3.10
+easyocr==1.7.1
+
+# ---------- Utilities ----------
+numpy==1.26.4
+pillow==10.2.0

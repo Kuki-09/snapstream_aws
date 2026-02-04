@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SnapStream | Admin Signup</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='auth.css') }}"
+    />
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+  </head>
+  <body class="auth-page signup-page">
+    <div class="auth-body">
+      <div class="signup-card">
+        <div class="admin-header">
+          <div class="icon-box">
+            <i class="ph ph-user-plus"></i>
+          </div>
+          <div class="admin-title">
+            <h1>Admin Registration</h1>
+            <p class="subtitle">Create a secure administrative account</p>
+          </div>
+        </div>
+
+        <form
+          id="signupForm"
+          action="{{ url_for('main_routes.admin_signup') }}"
+          method="POST"
+        >
+          <label>Full Legal Name <span>*</span></label>
+          <input
+            type="text"
+            name="fullname"
+            placeholder="Enter your full name"
+            required
+            value="{{ request.form.get('fullname','') }}"
+          />
+
+          <label>Email Address <span>*</span></label>
+          <input
+            type="email"
+            name="email"
+            placeholder="Enter your email"
+            required
+            value="{{ request.form.get('email','') }}"
+          />
+
+          <label>Security / Organization Token <span>*</span></label>
+          <input
+            type="text"
+            name="org_token"
+            placeholder="Enter your invite code"
+            required
+          />
+
+          <label>Password <span>*</span></label>
+          <div class="password-wrapper-signup">
+            <input
+              type="password"
+              name="password"
+              id="password"
+              placeholder="Enter your password"
+              required
+            />
+            <span class="eye-btn-signup" data-target="password">
+              <i class="ph ph-eye"></i>
+              <i class="ph ph-eye-slash" style="display: none"></i>
+            </span>
+          </div>
+
+          <label>Confirm Password <span>*</span></label>
+          <div class="password-wrapper-signup">
+            <input
+              type="password"
+              name="confirm_password"
+              id="confirm_password"
+              placeholder="Re-enter your password"
+              required
+            />
+            <span class="eye-btn-signup" data-target="confirm_password">
+              <i class="ph ph-eye"></i>
+              <i class="ph ph-eye-slash" style="display: none"></i>
+            </span>
+          </div>
+
+          <button type="submit" class="btn-primary">Register →</button>
+        </form>
+
+        <p class="bottom-text">
+          Already have an admin account?
+          <a href="{{ url_for('main_routes.admin_login') }}">Login</a>
+        </p>
+        <p class="bottom-text">
+          Not an admin?
+          <a href="{{ url_for('main_routes.login') }}">User Login</a>
+        </p>
+      </div>
+    </div>
+
+    <div id="toast-container"></div>
+    <script src="{{ url_for('static', filename='auth.js') }}"></script>
+
+    <script>
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% for cat,msg in messages %}
+          showToast("{{ msg }}","{{ cat }}");
+        {% endfor %}
+      {% endwith %}
+    </script>
+  </body>
+</html>

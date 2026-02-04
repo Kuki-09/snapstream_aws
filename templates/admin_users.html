@@ -1,0 +1,64 @@
+<div class="admin-card users-card">
+  <div class="users-header">
+    <h3>User Management</h3>
+
+    <div class="users-actions">
+      <input type="text" id="userSearch" placeholder="Search users..." />
+
+      <button class="btn-outline" id="activateBtn" style="display: none">
+        <i class="fa-regular fa-user"></i> Activate
+      </button>
+
+      <button class="btn-danger" id="suspendBtn" style="display: none">
+        <i class="fa-regular fa-user-slash"></i> Suspend
+      </button>
+    </div>
+  </div>
+  <div class="users-table-wrapper">
+    <table class="users-table">
+      <thead>
+        <tr>
+          <th><input type="checkbox" id="selectAll" /></th>
+          <th>User</th>
+          <th>Role</th>
+          <th>Status</th>
+          <th>Joined</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        {% for user in users %}
+        <tr data-user-id="{{ user.id }}" data-status="{{ user.status }}">
+          <td>
+            <input
+              type="checkbox"
+              class="user-checkbox"
+              value="{{ user.id }}"
+            />
+          </td>
+
+          <td class="user-cell">
+            <div class="avatar">{{ user.name[0]|upper }}</div>
+            <div>
+              <strong>{{ user.name }}</strong>
+              <span>{{ user.email }}</span>
+            </div>
+          </td>
+
+          <td>
+            <span class="role-badge {{ user.role }}"> {{ user.role }} </span>
+          </td>
+          <td class="status-cell">
+            {% set status = user.status|string|lower|trim %}
+            <span class="status-badge {{ status }}">
+              {{ status|capitalize }}
+            </span>
+          </td>
+
+          <td>{{ user.created_at.strftime('%m/%d/%Y') }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
