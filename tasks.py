@@ -2,12 +2,12 @@ import logging
 import os
 from celery_worker import celery
 import math
-import whisper 
+#import whisper 
 import spacy
 from textblob import TextBlob
 import cv2
 import pytesseract
-from ultralytics import YOLO  
+#from ultralytics import YOLO  
 from collections import Counter
 from datetime import datetime
 import boto3
