@@ -28,7 +28,7 @@ ADMINS_TABLE = dynamodb.Table("admins")
 MEDIA_TABLE = dynamodb.Table("media")
 ACTIVITY_TABLE = dynamodb.Table("activity")
 
-SNS_TOPIC_ARN = "arn:aws:sns:us-east-1:123456789012:admin-system-events"
+SNS_TOPIC_ARN = "arn:aws:sns:us-east-1:509399590795:admin-system-events"
 
 def get_user_by_email(email):
     resp = USERS_TABLE.get_item(
