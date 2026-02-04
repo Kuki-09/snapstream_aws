@@ -23,7 +23,7 @@ textblob==0.17.1
 #ultralytics==8.1.13
 opencv-python==4.9.0.80
 pytesseract==0.3.10
-easyocr==1.7.1
+#easyocr==1.7.1
 
 # ---------- Utilities ----------
 numpy==1.26.4
